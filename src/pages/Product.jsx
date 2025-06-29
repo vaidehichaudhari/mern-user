@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Product = () => {
   const [products, setProducts] = useState([]);
-  // const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [expanded, setExpanded] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,20 +15,17 @@ const Product = () => {
   useEffect(() => {
     Promise.all([
       fetch('http://localhost:8000/api/product/getAllProducts'),
-      // fetch('http://localhost:8000/api/brand/getAllBrands'),
       fetch('http://localhost:8000/api/category/getAllCategories')
     ])
-      .then(async ([productRes, brandRes, categoryRes]) => {
-        if (!productRes.ok || !brandRes.ok || !categoryRes.ok) {
-          throw new Error('Failed to fetch one or more resources');
+      .then(async ([productRes, categoryRes]) => {
+        if (!productRes.ok || !categoryRes.ok) {
+          throw new Error('Failed to fetch product or category data');
         }
 
         const productData = await productRes.json();
-        // const brandData = await brandRes.json();
         const categoryData = await categoryRes.json();
 
         setProducts(productData.products || []);
-        // setBrands(brandData.brands || []);
         setCategories(categoryData.categories || []);
       })
       .catch(err => {
@@ -38,10 +34,11 @@ const Product = () => {
       });
   }, []);
 
-  // const getBrandName = (id) => brands.find((b) => b.id === id || b._id === id)?.name || 'N/A';
-  const getCategoryName = (id) => categories.find((c) => c.id === id || c._id === id)?.name || 'N/A';
+  const getCategoryName = (id) =>
+    categories.find((c) => c.id === id || c._id === id)?.name || 'N/A';
 
-  const toggleReadMore = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
+  const toggleReadMore = (id) =>
+    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
 
   const handleAddToCart = (product) => {
     toast.success(`${product.name} added to cart!`);
@@ -50,7 +47,9 @@ const Product = () => {
   const renderStars = (rating = 4) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
-      stars.push(i <= rating ? <FaStar key={i} className="text-warning" /> : <FaRegStar key={i} className="text-secondary" />);
+      stars.push(i <= rating
+        ? <FaStar key={i} className="text-warning" />
+        : <FaRegStar key={i} className="text-secondary" />);
     }
     return stars;
   };
@@ -108,7 +107,6 @@ const Product = () => {
                   </p>
 
                   <p className="mb-1"><strong>Price:</strong> ₹{product.price.toFixed(2)}</p>
-                  {/* <p className="mb-1"><strong>Brand:</strong> {getBrandName(product.brandId)}</p> */}
                   <p className="mb-1"><strong>Category:</strong> {getCategoryName(product.categoryId)}</p>
 
                   <div className="mb-2">{renderStars(product.rating || 4)}</div>
@@ -148,7 +146,6 @@ const Product = () => {
             <h5>{quickViewProduct.name}</h5>
             <p>{quickViewProduct.description}</p>
             <p><strong>Price:</strong> ₹{quickViewProduct.price.toFixed(2)}</p>
-            {/* <p><strong>Brand:</strong> {getBrandName(quickViewProduct.brandId)}</p> */}
             <p><strong>Category:</strong> {getCategoryName(quickViewProduct.categoryId)}</p>
             <div>{renderStars(quickViewProduct.rating || 4)}</div>
           </Modal.Body>

@@ -8,6 +8,10 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { Toaster } from 'react-hot-toast';
 import ProductDetails from './pages/ProductDetails';
+{
+  /* The following line can be included in your src/index.js or App.js file */
+}
+import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <BrowserRouter>

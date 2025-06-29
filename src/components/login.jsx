@@ -17,7 +17,7 @@ const Login = () => {
         setSuccess("");
 
         try {
-            const response = await axios.post('http://localhost:7001/api/user/login', {
+            const response = await axios.post('http://localhost:8000/api/user/login', {
                 email,
                 password,
             });
